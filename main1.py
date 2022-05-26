@@ -6,7 +6,6 @@ import requests
 import os
 import time
 from replit import db
-import remove
 #notionアップロード
 from notion.client import NotionClient
 from notion.block import TextBlock
@@ -28,7 +27,7 @@ params = {
   'tweet.fields': 'created_at,public_metrics',
   'user.fields' : 'name',
   'media.fields' : 'duration_ms,height,media_key,preview_image_url,public_metrics,type,url,width,alt_text',
-  'max_results' : 10,
+  'max_results' : 50,
 }
 
 
@@ -46,120 +45,100 @@ dt_now = datetime.now(jst)
 def main():
   while True:
     for channelname in channelnames.keys():
-      global dt_now
       channelname_id = channelnames[f"{channelname}"]["id"]
       url = f"https://api.twitter.com/2/users/{channelname_id}/liked_tweets"
+      res = twitter.get(url, params = params)
+      tl = json.loads(res.text)
+      global notion_upload_data,img_datas,dt_now
 
-      while True:
-        while True:
+      if res.status_code == 200:
+        tl = json.loads(res.text)
+
+        # print(tl)
+        # print(f"name : {tl['includes']['users'][0]['name']}")
+        # print(f"user : {tl['includes']['users'][0]['username']}")
+        # print('----------------------------')
+
+        for l in tl['data']:
           try:
-            res = twitter.get(url, params = params)
-            tl = json.loads(res.text)
-            break
-          except:
-            print("取得失敗。再度実行します")
-            time.sleep(10)
+            media_keys_datas.clear() #配列をリセット
+            notion_history_data=True
+            other_data = False
+            for media_data in l['attachments']['media_keys']: #media_keysを配列に代入
+              if media_data in db[channelname]:
+                notion_history_data=False
+              media_keys_datas.append(media_data)
+            
+            if notion_history_data :
+              print(media_keys_datas)
+              print('----------------------------')
+              print(l['text'])
+              print(l['created_at'])
+              media_keys_data_count=1 #表示のためのカウント
+              for ls in tl['includes']['media']: #includesのmediaがあるだけループ
+                for media_keys_data in media_keys_datas: #media_keysの数だけループ
+                  if ls['media_key']==media_keys_data: #media_keysと一致するものを検索
+                    if(ls['type']=='photo'): #typeが画像かを判断
+                      print(str(media_keys_data_count)+"枚目の画像ダウンロード開始...")
+                      print("URL : "+str(ls['url']))
+                      file_name = str(media_keys_data)+".jpg"
+                      response = requests.get(ls['url'].replace('.jpg','?format=jpg&name=orig'))
+                      image = response.content
+                      with open(file_name, "wb") as aaa:
+                        aaa.write(image)
+                      print(file_name+"で保存しました")
+                      img_datas.append(file_name)
+                      db[channelname].append(media_keys_data)
+                      media_keys_data_count+=1
+                    elif(ls['type']=='animated_gif'): #typeがgifかを判断
+                      print(str(media_keys_data_count)+"枚目の画像ダウンロード開始...")
+                      print("URL : "+str(ls['preview_image_url']))
+                      file_name = str(media_keys_data)+".jpg"
+                      response = requests.get(ls['preview_image_url'].replace('.jpg','?format=jpg&name=orig'))
+                      image = response.content
+                      with open(file_name, "wb") as aaa:
+                        aaa.write(image)
+                      print(file_name+"で保存しました")
+                      img_datas.append(file_name)
+                      db[channelname].append(media_keys_data)
+                      media_keys_data_count+=1
+                    else: #その他
+                      print("その他画像ありツイート")
+                      other_data = True
+              #notionに追加 
+              dt_now = datetime.now(jst)
+              if other_data:
+                print("notonには追加されません")
+              else:
+                title_data = str(l['text'][:40])+"…"
+                channel_name = channelnames[f"{channelname}"]["name"]
+                notion_upload_data=[channel_name,title_data,l['text'],l['created_at']]
+                print("notionにアップロード開始...")
+                notion_upload(channel_name)
+              print('----------------------------')
+              for img_data in img_datas:
+                os.remove(f"./{img_data}")
+              img_datas.clear()
+            else:
+              print("すでに追加済み")
+          except KeyError: #attachments(media_keys)が存在しなかったら
+            print(l['text'])
+            print(l['created_at'])
+            print("画像なし")
+            print('----------------------------')
 
-        if res.status_code == 200:
-          next_data = keep_img(channelname,tl)
-          if next_data:
-            params['pagination_token'] = next_data
-          else:
-            if 'pagination_token' in params.keys():
-              del params['pagination_token']
-            break
-        else:
-          print("Failed: %d" % res.status_code)
+      else:
+        print("Failed: %d" % res.status_code)
 
       print("チャンネル名 : "+channelnames[f"{channelname}"]["name"]+"を実行しました。")
       print("実行時間 : "+str(dt_now))
-      for sleep_time_count in range(30):
-        if (30-sleep_time_count)%10==0:
-          print("カウント : "+str(30-sleep_time_count)+"秒")
+      for sleep_time_count in range(90):
+        if (90-sleep_time_count)%10==0:
+          print("カウント : "+str(90-sleep_time_count)+"秒")
         time.sleep(1)
 
-def keep_img(channelname,tl):
-  global notion_upload_data,img_datas,dt_now
-  notion_history_data_keep_img=False
-
-  if not channelname in db.keys():
-    db[channelname] = []
-
-  for l in tl['data']:
-    try:
-      media_keys_datas.clear() #配列をリセット
-      notion_history_data=True
-      other_data = False
-      for media_data in l['attachments']['media_keys']: #media_keysを配列に代入
-        if media_data in db[channelname]:
-          notion_history_data=False
-          notion_history_data_keep_img=True
-        media_keys_datas.append(media_data)
-      
-      if notion_history_data :
-        print(media_keys_datas)
-        print('----------------------------')
-        print(l['text'])
-        print(l['created_at'])
-        media_keys_data_count=1 #表示のためのカウント
-        for ls in tl['includes']['media']: #includesのmediaがあるだけループ
-          for media_keys_data in media_keys_datas: #media_keysの数だけループ
-            if ls['media_key']==media_keys_data: #media_keysと一致するものを検索
-              if(ls['type']=='photo'): #typeが画像かを判断
-                print(str(media_keys_data_count)+"枚目の画像ダウンロード開始...")
-                print("URL : "+str(ls['url']))
-                file_name = str(media_keys_data)+".jpg"
-                response = requests.get(ls['url'].replace('.jpg','?format=jpg&name=orig'))
-                image = response.content
-                with open(file_name, "wb") as aaa:
-                  aaa.write(image)
-                print(file_name+"で保存しました")
-                img_datas.append(file_name)
-                db[channelname].append(media_keys_data)
-                media_keys_data_count+=1
-              elif(ls['type']=='animated_gif'): #typeがgifかを判断
-                print(str(media_keys_data_count)+"枚目の画像ダウンロード開始...")
-                print("URL : "+str(ls['preview_image_url']))
-                file_name = str(media_keys_data)+".jpg"
-                response = requests.get(ls['preview_image_url'].replace('.jpg','?format=jpg&name=orig'))
-                image = response.content
-                with open(file_name, "wb") as aaa:
-                  aaa.write(image)
-                print(file_name+"で保存しました")
-                img_datas.append(file_name)
-                db[channelname].append(media_keys_data)
-                media_keys_data_count+=1
-              else: #その他
-                print("その他画像ありツイート")
-                other_data = True
-        #notionに追加 
-        dt_now = datetime.now(jst)
-        if other_data:
-          print("notonには追加されません")
-        else:
-          title_data = str(l['text'][:40])+"…"
-          channel_name = channelnames[f"{channelname}"]["name"]
-          notion_upload_data=[channel_name,title_data,l['text'],l['created_at']]
-          print("notionにアップロード開始...")
-          notion_upload(channel_name)
-        print('----------------------------')
-        for img_data in img_datas:
-          os.remove(f"./{img_data}")
-        img_datas.clear()
-      else:
-        print("すでに追加済み")
-
-    except KeyError: #attachments(media_keys)が存在しなかったら
-      print(l['text'])
-      print(l['created_at'])
-      print("画像なし")
-      print('----------------------------')
-
-  if not notion_history_data_keep_img:
-    return tl['meta']['next_token']
-  else:
-    return False
-
+  
+  
 
 
 #-------------------------------------------
@@ -243,10 +222,9 @@ def Twitter_data_upload(page_id):
   page.children.add_new(DividerBlock)
   page.children.add_new(TextBlock, title='')
   for img_data in img_datas:
-    page.children.add_new(ImageBlock).upload_file(f"./{img_data}")
+    image = page.children.add_new(ImageBlock).upload_file(f"./{img_data}")
   print("notionに画像アップロード完了")
 
 keep_alive.keep_alive()
 
-remove.remove()
 main()

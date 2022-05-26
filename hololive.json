@@ -616,5 +616,228 @@
       "#いろはにも絵",
       "#かざまが斬る"
     ]
+  },
+  "ayunda_risu": {
+    "name": "Ayunda Risu（アユンダ・リス）",
+    "id": 1234752200145899520,
+    "artTag": [
+      "#GambaRisu"
+    ],
+    "tags": [
+      "#Risu_Live"
+    ]
+  },
+  "moonahoshinova": {
+    "name": "Moona Hoshinova（ムーナ・ホシノヴァ）",
+    "id": 1234753886520393729,
+    "artTag": [
+      "#HoshinovArt"
+    ],
+    "tags": [
+      "#MoonA_Live",
+      "#MoonUtau",
+      "#GrassMoona",
+      "#MoonArchitect"
+    ]
+  },
+  "airaniiofifteen": {
+    "name": "Airani Iofifteen（アイラニ・イオフィフティーン）",
+    "id": 1235180878449397764,
+    "artTag": [
+      "#ioarts"
+    ],
+    "tags": [
+      "#ioLYFE",
+      "#iomemes"
+    ]
+  },
+  "kureijiollie": {
+    "name": "Kureiji Ollie（クレイジー・オリー）",
+    "id": 1328277233492844544,
+    "artTag": [
+      "#ZOMRADE"
+    ],
+    "tags": [
+      "#",
+      "#"
+    ]
+  },
+  "anyamelfissa": {
+    "name": "Anya Melfissa（アーニャ・メルフィッサ）",
+    "id": 1328277750000492545,
+    "artTag": [
+      "#anyatelier"
+    ],
+    "tags": [
+      "#Liveissa"
+    ]
+  },
+  "pavoliareine": {
+    "name": "Pavolia Reine（パヴォリア・レイネ）",
+    "id": 1328275136575799297,
+    "artTag": [
+      "#Reinessance"
+    ],
+    "tags": [
+      "#Pavolive"
+    ]
+  },
+  "vestiazeta": {
+    "name": "Vestia Zeta（ベスティア・ゼータ）",
+    "id": 1486633489101307907,
+    "artTag": [
+      "#"
+    ],
+    "tags": [
+      "#",
+      "#",
+      "#",
+      "#",
+      "#"
+    ]
+  },
+  "kaelakovalskia": {
+    "name": "Kaela Kovalskia（カエラ・コヴァルスキア）",
+    "id": 1486636197908602880,
+    "artTag": [
+      "#"
+    ],
+    "tags": [
+      "#",
+      "#",
+      "#",
+      "#",
+      "#"
+    ]
+  },
+  "kobokanaeru": {
+    "name": "Kobo Kanaeru（こぼ・かなえる）",
+    "id": 1486629076005634049,
+    "artTag": [
+      "#"
+    ],
+    "tags": [
+      "#",
+      "#",
+      "#",
+      "#",
+      "#"
+    ]
+  },
+  "moricalliope": {
+    "name": "Mori Calliope（森カリオペ）",
+    "id": 1283653858510598144,
+    "artTag": [
+      "#callillust"
+    ],
+    "tags": [
+      "#calliolive"
+    ]
+  },
+  "takanashikiara": {
+    "name": "Takanashi Kiara（小鳥遊キアラ）",
+    "id": 1283646922406760448,
+    "artTag": [
+      "#artsofashes"
+    ],
+    "tags": [
+      "#kfp",
+      "#キアライブ"
+    ]
+  },
+  "ninomaeinanis": {
+    "name": "Ninomae Ina’nis（一伊那尓栖）",
+    "id": 1283650008835743744,
+    "artTag": [
+      "#inART"
+    ],
+    "tags": [
+      "#TAKOTIME",
+      "#タコタイム"
+    ]
+  },
+  "gawrgura": {
+    "name": "Gawr Gura（がうる・ぐら）",
+    "id": 1283657064410017793,
+    "artTag": [
+      "#gawrt"
+    ],
+    "tags": [
+      "#gawrgura"
+    ]
+  },
+  "watsonameliaEN": {
+    "name": "Watson Amelia（ワトソン・アメリア）",
+    "id": 1283656034305769472,
+    "artTag": [
+      "#ameliaRT"
+    ],
+    "tags": [
+      "#amelive"
+    ]
+  },
+  "irys_en": {
+    "name": "IRyS（アイリス）",
+    "id": 1363705980261855232,
+    "artTag": [
+      "#"
+    ],
+    "tags": [
+      "#"
+    ]
+  },
+  "tsukumosana": {
+    "name": "Tsukumo Sana（九十九佐命）",
+    "id": 1409819816194576394,
+    "artTag": [
+      "#galaxillust"
+    ],
+    "tags": [
+      "#SanaLanding",
+      "#Sanallite"
+    ]
+  },
+  "ceresfauna": {
+    "name": "Ceres Fauna（セレス・ファウナ）",
+    "id": 1409784760805650436,
+    "artTag": [
+      "#FineFaunart"
+    ],
+    "tags": [
+      "#faunline"
+    ]
+  },
+  "ourokronii": {
+    "name": "Ouro Kronii（オーロ・クロニー）",
+    "id": 1409817096523968513,
+    "artTag": [
+      "#クロニーラ"
+    ],
+    "tags": [
+      "#krotime"
+    ]
+  },
+  "nanashimumei_en": {
+    "name": "Nanashi Mumei（七詩ムメイ）",
+    "id": 1409817941705515015,
+    "artTag": [
+      "#drawMEI"
+    ],
+    "tags": [
+      "#memeMEI",
+      "#watchMEI"
+    ]
+  },
+  "hakosbaelz": {
+    "name": "Hakos Baelz（ハコス・ベールズ）",
+    "id": 1409783149211443200,
+    "artTag": [
+      "#illustrayBAE"
+    ],
+    "tags": [
+      "#enterbaelz",
+      "#MADDOOFS",
+      "#YABAEL"
+    ]
   }
 }
